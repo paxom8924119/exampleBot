@@ -12,7 +12,7 @@ const bot= new TelegramBot(TOKEN , {
 
 bot.onText(/\/start/, function (msg, match) {
     chat = msg.hasOwnProperty('chat') ? msg.chat.id : msg.from.id;
-    bot.sendMessage(chat,`Я Вернулся. Каждые день в 4 утра я буду присылать тебе 5 новых слов`)
+    bot.sendMessage(chat,`Каждые день в 4 утра я буду присылать тебе 5 новых слов`)
     .then(function (data) {
       console.log('good test')
     })
