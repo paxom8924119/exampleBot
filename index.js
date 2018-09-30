@@ -113,10 +113,8 @@ function sendWordsToday(data = 'qwe'){
   
   
   function INow(){
-    bot.sendMessage({
-      chat_id: user_id,
-      text: 'значит повтори)',
-    })
+      console.log('уже знаю')
+    bot.sendMessage(user_id,'значит повтори')
       .then(function (data) {
         // console.log(util.inspect(data, false, null));
         return data;
@@ -128,10 +126,7 @@ function sendWordsToday(data = 'qwe'){
   }
   
   function noIntresting(){
-    bot.sendMessage({
-      chat_id: user_id,
-      text: `Сейчас поменяю , привереда`,
-    })
+    bot.sendMessage(user_id,`Сейчас поменяю , привереда`)
       .then(function (data) {
         // console.log(util.inspect(data, false, null));
         deleteWords(true)
@@ -143,13 +138,10 @@ function sendWordsToday(data = 'qwe'){
   }
   
   function good(){
-    bot.sendMessage({
-      chat_id: user_id,
-      text: `////////////ГОРЖУСЬ ТОБОЙ////////////
+    bot.sendMessage(user_id,`////////////ГОРЖУСЬ ТОБОЙ////////////
   ты выучила 5 слов из ${wordsLng - 5}
   ////////////ДО ЗАВТРА////////////
-  `,
-    })
+  `)
       .then(function (data) {
         // console.log(util.inspect(data, false, null));
         deleteWords()
