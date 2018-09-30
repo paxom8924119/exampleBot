@@ -10,6 +10,16 @@ const bot= new TelegramBot(TOKEN , {
     polling:true    
 })
 
+bot.onText(/\/test/, function (msg, match) {
+    chat = msg.hasOwnProperty('chat') ? msg.chat.id : msg.from.id;
+    bot.sendMessage(chat,'test message')
+    .then(function (data) {
+      console.log('good test')
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+  });
 
 setInterval(() => {
     let status = true;
