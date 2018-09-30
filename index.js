@@ -1,5 +1,9 @@
 const TelegramBot = require('node-telegram-bot-api');
+const fs = require('fs');
+
 const TOKEN = '547699301:AAHc4Ml2BvZDHruy3LA4wpK_fJOhXmMwqoQ';
+
+const user_id = 546579876;
 
 const bot= new TelegramBot(TOKEN , {
     polling:true,
@@ -19,24 +23,26 @@ bot.on('message' , msg =>{
       data = data.join('\n').toString();
       TEXT = data;
   //546579876 644045807
+  console.log(msg)
+  console.log(data)
        sendWordsToday(data);
        log(4)
     });
 })
 
-fs.readFile("hello.txt", "utf8",
-  function (error, data) {
-    console.log('ok')
-    if (error) throw error;
-    data = data.replace(/\t/g, '').replace(/<br>/g, '\n');
-    wordsLng = data.split('\n').length;
-    data = data.split('\n').slice(0, 5);
-    data = data.join('\n').toString();
-    TEXT = data;
-//546579876 644045807
-     sendWordsToday(data);
-     log(4)
-  });
+// fs.readFile("hello.txt", "utf8",
+//   function (error, data) {
+//     console.log('ok')
+//     if (error) throw error;
+//     data = data.replace(/\t/g, '').replace(/<br>/g, '\n');
+//     wordsLng = data.split('\n').length;
+//     data = data.split('\n').slice(0, 5);
+//     data = data.join('\n').toString();
+//     TEXT = data;
+// //546579876 644045807
+//      sendWordsToday(data);
+//      log(4)
+//   });
 
   bot.on('inline.callback.query', function (msg) {
 
@@ -48,11 +54,8 @@ fs.readFile("hello.txt", "utf8",
   });
 
 
-function sendWordsToday(data){
-    bot.sendMessage({
-      chat_id: user_id,
-      text: data,
-      reply_markup: JSON.stringify({
+function sendWordsToday(data = 'qwe'){
+    bot.sendMessage(user_id ,data , {reply_markup: JSON.stringify({
         inline_keyboard: [
           [
             {
@@ -71,8 +74,7 @@ function sendWordsToday(data){
             }
           ]
         ]
-      })
-    })
+      })})
       .then(function (data) {
         // console.log(util.inspect(data, false, null));
         wordsToday = [];
