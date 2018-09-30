@@ -1,4 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
+const express = require('express');
+let app = express();
 const fs = require('fs');
 
 const TOKEN = '547699301:AAHc4Ml2BvZDHruy3LA4wpK_fJOhXmMwqoQ';
@@ -186,4 +188,9 @@ function log(action) {
 
     });
 }
+
+app.get('/',(req,res)=>{
+	res.send('good');
+})
+app.listen(process.env.PORT);
 
