@@ -4,7 +4,7 @@ const fs = require('fs');
 const TOKEN = '547699301:AAHc4Ml2BvZDHruy3LA4wpK_fJOhXmMwqoQ';
 
               //546579876 644045807
-const user_id = 546579876;
+const user_id = 644045807;
 
 const bot= new TelegramBot(TOKEN , {
     polling:true    
@@ -25,7 +25,7 @@ setInterval(() => {
     let status = true;
     let data = new Date();
     let hour = data.getHours();
-    if(hour === 17){
+    if(hour === 4){
         if(status){
         status = false;
         fs.readFile("hello.txt", "utf8",
