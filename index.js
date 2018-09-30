@@ -3,77 +3,70 @@ const fs = require('fs');
 
 const TOKEN = '547699301:AAHc4Ml2BvZDHruy3LA4wpK_fJOhXmMwqoQ';
 
+              //546579876 644045807
 const user_id = 546579876;
 
 const bot= new TelegramBot(TOKEN , {
-    polling:true,
-    updates: {
-        enabled: true
+    polling:true    
+})
+
+
+setInterval(() => {
+    let status = true;
+    let data = new Date();
+    let hour = data.getHours();
+    if(hour === 17){
+        if(status){
+        status = false;
+        fs.readFile("hello.txt", "utf8",
+            function(error, data) {
+                console.log('ok')
+                if (error) throw error;
+                data = data.replace(/\t/g, '').replace(/<br>/g, '\n');
+                wordsLng = data.split('\n').length;
+                data = data.split('\n').slice(0, 5);
+                data = data.join('\n').toString();
+                TEXT = data;
+                sendWordsToday(data);
+                log(4)
+            });
+        }
+    }else{status=true};
+}, 600000);
+
+var iKeys = [];
+iKeys.push([
+    {
+        text: "выучила",
+        callback_data: '1'
     },
-})
-
-bot.on('message' , msg =>{
-    fs.readFile("hello.txt", "utf8",
-    function (error, data) {
-      console.log('ok')
-      if (error) throw error;
-      data = data.replace(/\t/g, '').replace(/<br>/g, '\n');
-      wordsLng = data.split('\n').length;
-      data = data.split('\n').slice(0, 5);
-      data = data.join('\n').toString();
-      TEXT = data;
-  //546579876 644045807
-       sendWordsToday(data);
-       log(4)
-    });
-})
-
-// fs.readFile("hello.txt", "utf8",
-//   function (error, data) {
-//     console.log('ok')
-//     if (error) throw error;
-//     data = data.replace(/\t/g, '').replace(/<br>/g, '\n');
-//     wordsLng = data.split('\n').length;
-//     data = data.split('\n').slice(0, 5);
-//     data = data.join('\n').toString();
-//     TEXT = data;
-// //546579876 644045807
-//      sendWordsToday(data);
-//      log(4)
-//   });
-
-  bot.on('inline.callback.query', function (msg) {
-    var data = msg.data;
+    {
+        text: "ненужные слова",
+        callback_data: '2'
+    },
+    {
+        text: "уже знаю",
+        callback_data: '3'
+    }
+]);
+bot.on('callback_query', function (msg) {
+    let data = msg.data;
+    console.log(msg)
     if(data == '1') {good();log(1)}
     else if(data == '2') { noIntresting();log(2)}
     else {INow();log(3)}
-    console.log(TEXT)
-  });
 
+});
 
 function sendWordsToday(data = 'qwe'){
-    bot.sendMessage(user_id ,data , {reply_markup: JSON.stringify({
-        inline_keyboard: [
-          [
-            {
-              text: 'выучила',
-              callback_data: '1'
-            },
-          ],
-          [
-            {
-              text: 'ненужные слова',
-              callback_data: '2'
-            },
-            {
-              text: 'уже знаю',
-              callback_data: '3'
-            }
-          ]
-        ]
-      })})
+    let options = {
+            reply_markup: JSON.stringify({
+            inline_keyboard: iKeys,
+            parse_mode: 'Markdown'
+            })
+        };
+    bot.sendMessage(user_id ,data , options)
       .then(function (data) {
-        // console.log(util.inspect(data, false, null));
         wordsToday = [];
       })
       .catch(function (err) {
@@ -100,23 +93,13 @@ function sendWordsToday(data = 'qwe'){
     });  
   }
   
-  function getDate(){
-    let data = new Date();
-    let hour = data.getHours();
-    let minute = data.getMinutes();
-    console.log(minute)
-   if(hour === 8 && minute == 0){
-     return true;
-   }else return false;
-  }
-  
-  
+
   
   function INow(){
       console.log('уже знаю')
-    bot.sendMessage(user_id,'значит повтори')
+    bot.sendMessage(user_id,'Сейчас дам другие')
       .then(function (data) {
-        // console.log(util.inspect(data, false, null));
+        deleteWords(true)
         return data;
       })
       .catch(function (err) {
@@ -136,7 +119,6 @@ function sendWordsToday(data = 'qwe'){
         console.log(err);
       });
   }
-  
   function good(){
     bot.sendMessage(user_id,`////////////ГОРЖУСЬ ТОБОЙ////////////
   ты выучила 5 слов из ${wordsLng - 5}
