@@ -10,6 +10,16 @@ const bot= new TelegramBot(TOKEN , {
     polling:true    
 })
 
+bot.onText(/\/start/, function (msg, match) {
+    chat = msg.hasOwnProperty('chat') ? msg.chat.id : msg.from.id;
+    bot.sendMessage(chat,`Я Вернулся. Каждые день в 4 утра я буду присылать тебе 5 новых слов`)
+    .then(function (data) {
+      console.log('good test')
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+  });
 bot.onText(/\/test/, function (msg, match) {
     chat = msg.hasOwnProperty('chat') ? msg.chat.id : msg.from.id;
     bot.sendMessage(chat,'test message')
