@@ -7,7 +7,7 @@ const TOKEN = '547699301:AAHc4Ml2BvZDHruy3LA4wpK_fJOhXmMwqoQ';
 
 
 //vlad : 546579876 polly : 644045807
-const USER_ID = '546579876'
+const USER_ID = '644045807'
 
 
 const bot = new TelegramBot(TOKEN, {polling: true})
