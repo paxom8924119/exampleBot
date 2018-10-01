@@ -5,45 +5,47 @@ const fs = require('fs');
 
 const TOKEN = '547699301:AAHc4Ml2BvZDHruy3LA4wpK_fJOhXmMwqoQ';
 
-//546579876 644045807
-const user_id = 644045807;
 
-const bot = new TelegramBot(TOKEN, {
-    polling: true
-})
+//vlad : 546579876 polly : 644045807
+const USER_ID = '546579876'
 
-bot.onText(/\/start/, function(msg, match) {
-    chat = msg.hasOwnProperty('chat') ? msg.chat.id : msg.from.id;
-    bot.sendMessage(chat, `Каждые день в 4 утра я буду присылать тебе 5 новых слов`)
-        .then(function(data) {
-            console.log('good test')
-        })
-        .catch(function(err) {
-            console.log(err);
-        });
-});
-bot.onText(/\/test/, function(msg, match) {
-    chat = msg.hasOwnProperty('chat') ? msg.chat.id : msg.from.id;
-    bot.sendMessage(chat, 'test message')
-        .then(function(data) {
-            console.log('good test')
-        })
-        .catch(function(err) {
-            console.log(err);
-        });
-});
 
-function init() {
-    setInterval(() => {
-        let status = true;
-        let data = new Date();
-        let hour = data.getHours();
-        if (hour === 4) {
-            if (status) {
-                status = false;
-                fs.readFile("hello.txt", "utf8",
-                    function(error, data) {
-                        console.log('ok')
+const bot = new TelegramBot(TOKEN, { polling: true };)
+
+const COMAND_BOT = (comand) => {
+    let message = '';
+    switch (action) {
+        case 'start':
+            message = 'Каждые день в 4 утра я буду присылать тебе 5 новых слов';
+            break;
+        case 'test':
+            message = 'test message';
+        default:
+            message = 'не понимаю о чем вы';
+            break;
+    }
+    bot.onText(`/\/${comand}/`, function(msg, match) {
+        chat = msg.hasOwnProperty('chat') ? msg.chat.id : msg.from.id;
+        bot.sendMessage(chat, message)
+            .then(function(data) {
+                console.log('ok')
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
+    });
+};
+    (()=>{
+        let STATUS = true;
+        setInterval(() => {
+          
+            let data = new Date();
+            let hour = data.getHours();
+            console.log(getHours());
+            if (hour === 4) {
+                if (STATUS) {
+                    STATUS = false;
+                    fs.readFile("hello.txt", "utf8",function(error, data) {
                         if (error) throw error;
                         data = data.replace(/\t/g, '').replace(/<br>/g, '\n');
                         wordsLng = data.split('\n').length;
@@ -53,15 +55,13 @@ function init() {
                         sendWordsToday(data);
                         log(4)
                     });
-            }
-        } else { status = true };
-    }, 600000);
-}
-init();
+                }
+            } else { STATUS = true };
+        }, 100000);
+    })();
 
 
-var iKeys = [];
-iKeys.push([
+const iKeys = ([
     {
         text: "выучила",
         callback_data: '1'
@@ -75,40 +75,48 @@ iKeys.push([
         callback_data: '3'
     }
 ]);
+
 bot.on('callback_query', function(msg) {
     let data = msg.data;
-    console.log(msg)
-    if (data == '1') { good(); log(1) }
-    else if (data == '2') { noIntresting(); log(2) }
-    else { INow(); log(3) }
-
+    if (data == '1') {
+        good();
+        log(1);
+    }
+    else if (data == '2') {
+        noIntresting();
+        log(2);
+    }
+    else {
+        INow();
+        log(3);
+    }
 });
 
-function sendWordsToday(data = 'qwe') {
+function sendWordsToday(data = 'empti message') {
     let options = {
         reply_markup: JSON.stringify({
             inline_keyboard: iKeys,
             parse_mode: 'Markdown'
         })
     };
-    bot.sendMessage(user_id, data, options)
+    bot.sendMessage(USER_ID, data, options)
         .then(function(data) {
             wordsToday = [];
+            return data;
         })
         .catch(function(err) {
             console.log(err);
+            return err;
         });
 }
 
 function deleteWords(againSend = false) {
     fs.readFile('hello.txt', 'utf8', function(err, TEXTFILE) {
-        if (err) {
-            // check and handle err
-        }
+        if (err) throw err;
         var linesExceptFirst = TEXTFILE.split('\n').slice(11).join('\n');
         fs.writeFile("hello.txt", linesExceptFirst, function(error) {
-            if (error) throw error; // если возникла ошибка
-            console.log('данные успешно удалены');  // выводим считанные данные
+            if (error) throw error;
+            console.log('данные успешно удалены');
             if (againSend) {
                 linesExceptFirst = linesExceptFirst.replace(/\t/g, '').replace(/<br>/g, '\n');
                 linesExceptFirst = linesExceptFirst.split('\n').slice(0, 5);
@@ -119,11 +127,8 @@ function deleteWords(againSend = false) {
     });
 }
 
-
-
 function INow() {
-    console.log('уже знаю')
-    bot.sendMessage(user_id, 'Сейчас дам другие')
+    bot.sendMessage(USER_ID, 'Сейчас дам другие')
         .then(function(data) {
             deleteWords(true)
             return data;
@@ -135,7 +140,7 @@ function INow() {
 }
 
 function noIntresting() {
-    bot.sendMessage(user_id, `Сейчас поменяю , привереда`)
+    bot.sendMessage(USER_ID, `Сейчас поменяю , привереда`)
         .then(function(data) {
             // console.log(util.inspect(data, false, null));
             deleteWords(true)
@@ -143,23 +148,24 @@ function noIntresting() {
         })
         .catch(function(err) {
             console.log(err);
+            return err;
         });
 }
 function good() {
-    bot.sendMessage(user_id, `////////////ГОРЖУСЬ ТОБОЙ////////////
+    let message = `////////////ГОРЖУСЬ ТОБОЙ////////////
   ты выучила 5 слов из ${wordsLng - 5}
-  ////////////ДО ЗАВТРА////////////
-  `)
+  ////////////ДО ЗАВТРА////////////`;
+
+    bot.sendMessage(USER_ID,message )
         .then(function(data) {
-            // console.log(util.inspect(data, false, null));
             deleteWords()
+            return data;
         })
         .catch(function(err) {
             console.log(err);
+            return err;
         });
-
 }
-
 
 function log(action) {
     let log = '';
@@ -177,20 +183,16 @@ function log(action) {
         case 4:
             log = `получила слова : ${date} \n`
             break;
-
         default:
             break;
     }
     fs.appendFile("log.txt", log, function(error) {
-
-        if (error) throw error; // если возникла ошибка
-
-
+        if (error) throw error;
     });
 }
 
-app.get('/',(req,res)=>{
-	res.send('good');
+app.get('/', (req, res) => {
+    res.send('good');
 })
 app.listen(process.env.PORT);
 
