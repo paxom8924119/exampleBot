@@ -1,14 +1,3 @@
-array	 - 	ряд, порядок, строй	
-arrest	 - 	задерживать, тормозить	
-arrive	 - 	прибывать	
-arrogant	 - 	высокомерный	
-arrow	 - 	стрела, стрелка	
-arson	 - 	поджог	
-article	 - 	статья	
-article	 - 	вещь, изделие	
-artificial	 - 	искусственный	
-as though	 - 	как будто	
-as well	 - 	также	
 as well as	 - 	так же как и	
 ascend	 - 	восходить	
 ascertain	 - 	выяснить, установить	
